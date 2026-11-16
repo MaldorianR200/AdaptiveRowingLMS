@@ -1,0 +1,37 @@
+<div class="page narrow">
+  <p class="eyebrow">Настройки отображения</p>
+  <h1>Доступность</h1>
+  <p class="lead">
+    Чек-лист содержит критерии для фактической проверки. По умолчанию ни один критерий не отмечен
+    выполненным.
+  </p>
+  <section class="settings-panel">
+    <label class="toggle-row"
+      ><span>Увеличенный размер текста</span
+      ><input
+        type="checkbox"
+        [ngModel]="state.settings().largeText"
+        (ngModelChange)="state.setSetting('largeText', $event)" /></label
+    ><label class="toggle-row"
+      ><span>Контрастный режим</span
+      ><input
+        type="checkbox"
+        [ngModel]="state.settings().highContrast"
+        (ngModelChange)="state.setSetting('highContrast', $event)" /></label
+    ><label class="toggle-row"
+      ><span>Уменьшить анимацию</span
+      ><input
+        type="checkbox"
+        [ngModel]="state.settings().reducedMotion"
+        (ngModelChange)="state.setSetting('reducedMotion', $event)"
+    /></label>
+  </section>
+  <h2>Чек-лист проверки</h2>
+  <div class="check-row" *ngFor="let item of checks; let i = index">
+    <span>{{ item }}</span><select [ngModel]="statuses[i]" (ngModelChange)="setStatus(i, $event)">
+      <option>Не проверено</option>
+      <option>Выполнено</option>
+      <option>Требует исправления</option>
+    </select>
+  </div>
+</div>

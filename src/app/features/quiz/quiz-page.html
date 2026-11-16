@@ -1,0 +1,77 @@
+<div class="page narrow">
+  <p class="eyebrow">Итоговая проверка знаний</p>
+  <h1>Тест по технике безопасности</h1>
+  <p class="lead">
+    {{ rules.questionCount }} заданий · максимум {{ rules.totalScore }} баллов · проходной балл
+    {{ rules.passingScore }} · попыток использовано: {{ state.attempts().length }} из
+    {{ rules.maxAttempts }}.
+  </p>
+  <div class="notice" *ngIf="state.attempts().length >= 2">
+    Две попытки использованы. Тренер может сбросить результаты профиля.
+  </div>
+  <form (ngSubmit)="submit()">
+    <article class="question-card" *ngFor="let q of questions; let qi = index">
+      <div class="question-head">
+        <span class="question-number">{{ qi + 1 | number: '2.0' }}</span>
+        <div>
+          <span class="eyebrow">{{ typeName(q.type) }}</span>
+          <h2>{{ q.text }}</h2>
+        </div>
+      </div>
+      <div class="answer-list" *ngIf="q.type === 'single' || q.type === 'boolean'">
+        <label *ngFor="let option of q.options; let oi = index"
+          ><input
+            type="radio"
+            [name]="q.id"
+            [value]="q.type === 'boolean' ? (oi === 0 ? 'true' : 'false') : '' + oi"
+            [(ngModel)]="answers[q.id]"
+          />
+          <span>{{ option }}</span></label
+        >
+      </div>
+      <div class="answer-list" *ngIf="q.type === 'multiple'">
+        <label *ngFor="let option of q.options; let oi = index"
+          ><input
+            type="checkbox"
+            [checked]="isChecked(q.id, '' + oi)"
+            (change)="toggle(q.id, '' + oi, $event)"
+          />
+          <span>{{ option }}</span></label
+        >
+      </div>
+      <div class="matching" *ngIf="q.type === 'matching'">
+        <label *ngFor="let term of q.options; let oi = index"
+          ><span>{{ term }}</span
+          ><select
+            [ngModel]="matchValue(q.id, '' + oi)"
+            [name]="q.id + '-' + oi"
+            (ngModelChange)="setMatch(q.id, '' + oi, $event)"
+          >
+            <option value="">Выберите определение</option>
+            <option value="0">А. Фиксация показателей состояния и переносимости нагрузок</option>
+            <option value="1">Б. Подготовительный этап перед основной нагрузкой</option>
+            <option value="2">В. Постепенное возвращение организма после нагрузки</option>
+          </select></label
+        >
+      </div>
+      <input
+        class="text-answer"
+        *ngIf="q.type === 'short'"
+        type="text"
+        [(ngModel)]="answers[q.id]"
+        [name]="q.id"
+        placeholder="Введите короткий ответ"
+      />
+    </article>
+    <div class="form-actions">
+      <p>Незаполненные ответы принесут 0 баллов. Ответы можно менять до отправки.</p>
+      <button
+        class="button primary"
+        type="submit"
+        [disabled]="state.attempts().length >= rules.maxAttempts"
+      >
+        Завершить попытку
+      </button>
+    </div>
+  </form>
+</div>

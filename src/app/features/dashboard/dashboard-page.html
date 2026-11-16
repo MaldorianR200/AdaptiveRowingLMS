@@ -1,0 +1,23 @@
+<div class="page">
+  <p class="eyebrow">Личный кабинет спортсмена</p>
+  <h1>Мой прогресс</h1>
+  <p class="lead">{{ state.profileName() }} · обязательные задания курса</p>
+  <div class="stats">
+    <div>
+      <strong>{{ state.completedPageIds().length }} / 4</strong><span>страниц лекции изучено</span>
+    </div>
+    <div>
+      <strong>{{ state.lectureComplete() ? 'Завершена' : 'В процессе' }}</strong><span
+        >статус лекции</span
+      >
+    </div>
+    <div>
+      <strong>{{ state.bestScore() | number: '1.0-2' }} / 5</strong><span>лучший результат</span>
+    </div>
+    <div>
+      <strong>{{ state.attempts().length }} / 2</strong><span>попыток использовано</span>
+    </div>
+  </div>
+  <a class="button primary" routerLink="/course">Выбрать занятие →</a>
+  <p>Прогресс обязательных заданий не отражает весь прочитанный контент курса.</p>
+</div>

@@ -1,0 +1,85 @@
+<div class="lecture-layout">
+  <aside class="lecture-nav">
+    <a class="back-link" routerLink="/course">← К курсу</a>
+    <p class="eyebrow">Лекция</p>
+    <h2>Техника безопасности</h2>
+    <p class="lecture-nav__hint">Выберите любую страницу — проходить их по порядку не требуется.</p>
+    <div class="lecture-list">
+      <a
+        *ngFor="let p of pages; let i = index"
+        [routerLink]="['/course/lecture', i + 1]"
+        [class.active]="current() === i"
+        [class.done]="state.completedPageIds().includes(p.id)"
+        ><span>{{ i + 1 | number: '2.0' }}</span>
+        <div>
+          {{ p.title
+          }}<small>{{ state.completedPageIds().includes(p.id) ? 'Изучено' : 'Не изучено' }}</small>
+        </div>
+        <b *ngIf="state.completedPageIds().includes(p.id)">✓</b></a
+      >
+    </div>
+    <div class="mini-progress">
+      <span>Прогресс лекции</span><strong>{{ state.completedPageIds().length }} / 4</strong>
+      <div class="progress"><i [style.width.%]="state.completedPageIds().length * 25"></i></div>
+    </div>
+  </aside>
+  <article class="lecture-content">
+    <div class="page-heading compact">
+      <div>
+        <p class="eyebrow">Страница {{ current() + 1 }} из 4</p>
+        <h1>{{ page().title }}</h1>
+      </div>
+      <span class="status" [class.success]="state.completedPageIds().includes(page().id)">{{
+        state.completedPageIds().includes(page().id) ? 'Изучено' : 'В процессе'
+      }}</span>
+    </div>
+    <div class="prose">
+      <p *ngFor="let paragraph of page().text">{{ paragraph }}</p>
+    </div>
+    <div class="illustration">
+      <div class="illustration-art">
+        {{
+          current() === 2
+            ? 'СТАРТ · ПАУЗА · СТОП'
+            : current() === 3
+              ? 'ДАТА · НАГРУЗКА · САМОЧУВСТВИЕ'
+              : 'БЕЗОПАСНОСТЬ'
+        }}
+      </div>
+      <p>{{ page().illustration }}</p>
+      <small>Альтернативное описание: {{ page().alt }}</small>
+    </div>
+    <div class="takeaways">
+      <strong>Ключевые ориентиры</strong>
+      <ul>
+        <li *ngFor="let item of page().takeaways">{{ item }}</li>
+      </ul>
+    </div>
+    <div class="lecture-actions">
+      <button class="button secondary" [disabled]="current() === 0" (click)="go(current())">
+        ← Назад</button
+      ><button
+        class="button primary"
+        *ngIf="!state.completedPageIds().includes(page().id)"
+        (click)="mark()"
+      >
+        Отметить как изученное</button
+      ><button
+        class="button primary"
+        *ngIf="state.completedPageIds().includes(page().id) && current() < 3"
+        (click)="go(current() + 2)"
+      >
+        Следующая страница →</button
+      ><button
+        class="button primary"
+        *ngIf="state.completedPageIds().length === pages.length && !state.lectureComplete()"
+        (click)="finish()"
+      >
+        Завершить лекцию
+      </button>
+    </div>
+    <div class="notice" *ngIf="state.lectureComplete()">
+      Лекция завершена. <a routerLink="/course/quiz">Перейти к итоговому тестированию →</a>
+    </div>
+  </article>
+</div>

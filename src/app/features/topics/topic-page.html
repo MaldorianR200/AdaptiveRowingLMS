@@ -1,0 +1,67 @@
+<div class="lesson-page">
+  <a class="back-link" routerLink="/course">← Все занятия</a>
+
+  @if (topic(); as lesson) {
+    <header class="lesson-heading">
+      <p class="eyebrow">Самостоятельное занятие</p>
+      <h1>{{ lesson.title }}</h1>
+      <p>{{ lesson.description }}</p>
+      <div class="lesson-outcome"><strong>После занятия</strong> {{ lesson.outcome }}</div>
+    </header>
+
+    @if (lesson.id === 'safety') {
+      <section class="lesson-section" aria-labelledby="safety-title">
+        <div class="lesson-section-heading">
+          <div>
+            <p class="eyebrow">Лекция по технике безопасности</p>
+            <h2 id="safety-title">Откройте любую страницу</h2>
+          </div>
+          <span>4 самостоятельные страницы</span>
+        </div>
+        <p>
+          Страницы доступны в любом порядке. Каждую можно отметить изученной отдельно; для итогового
+          теста нужно изучить все четыре.
+        </p>
+        <div class="lesson-link-grid">
+          @for (page of safetyPages; track page.id; let index = $index) {
+            <a class="lesson-link" [routerLink]="['/course/lecture', index + 1]">
+              <span>{{ index + 1 | number: '2.0' }}</span>
+              <strong>{{ page.title }}</strong>
+              <span aria-hidden="true">↗</span>
+            </a>
+          }
+        </div>
+      </section>
+    } @else {
+      @for (section of sections(); track section.heading) {
+        <section class="lesson-section">
+          <h2>{{ section.heading }}</h2>
+          @for (paragraph of section.paragraphs; track paragraph) {
+            <p>{{ paragraph }}</p>
+          }
+        </section>
+      }
+      @if (lesson.id === 'foundations') {
+        <a class="lesson-related" routerLink="/materials"
+          >Смотреть адаптивную тренировку на гребном тренажёре <span aria-hidden="true">↗</span></a
+        >
+      }
+      @if (lesson.id === 'self-control') {
+        <a class="lesson-related" href="assets/documents/training-diary.csv" download
+          >Скачать шаблон дневника CSV <span aria-hidden="true">↓</span></a
+        >
+      }
+    }
+
+    <div class="lesson-bottom">
+      <a class="button secondary" routerLink="/course">← Вернуться к занятиям</a>
+    </div>
+  } @else {
+    <div class="lesson-empty">
+      <p class="eyebrow">Занятие не найдено</p>
+      <h1>Проверьте адрес</h1>
+      <p>Такой темы нет в программе курса.</p>
+      <a class="button primary" routerLink="/course">Посмотреть занятия</a>
+    </div>
+  }
+</div>

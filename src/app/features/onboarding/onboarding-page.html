@@ -1,0 +1,139 @@
+<main class="onboarding-shell" [class.switch-shell]="switchMode" aria-labelledby="onboarding-title">
+  @if (switchMode) {
+    <section class="onboarding-switcher" aria-labelledby="switch-title">
+      <a class="onboarding-brand" routerLink="/" aria-label="Adaptive Rowing LMS"
+        ><span class="brand-mark" aria-hidden="true"><i></i></span
+        ><span>Adaptive Rowing <b>LMS</b></span></a
+      >
+      <p class="eyebrow">Локальные профили</p>
+      <h1 id="switch-title">Кто продолжит маршрут?</h1>
+      <p class="form-intro">
+        Выберите существующий профиль. Его прогресс и результаты останутся отдельно.
+      </p>
+      <div class="existing-profiles">
+        @for (profile of existingProfiles(); track profile.id) {
+          <button class="existing-profile" type="button" (click)="chooseProfile(profile.id)">
+            <span class="profile-avatar">{{ profile.firstName.slice(0, 1) }}</span><span
+              ><strong>{{ lms.profileName(profile) }}</strong
+              ><small>{{ roleLabel(profile.role) }}</small></span
+            ><b>→</b>
+          </button>
+        }
+      </div>
+      <button class="button secondary" type="button" (click)="cancelSwitch()">Отмена</button
+      ><a class="create-link" routerLink="/onboarding" [queryParams]="{ returnUrl: returnUrl }"
+        >Создать новый профиль</a
+      >
+    </section>
+  } @else {
+    <section class="onboarding-visual" aria-label="О платформе">
+      <a class="onboarding-brand" routerLink="/" aria-label="Adaptive Rowing LMS"
+        ><span class="brand-mark" aria-hidden="true"><i></i></span
+        ><span>Adaptive Rowing <b>LMS</b></span></a
+      >
+      <div class="water-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="visual-copy">
+        <p class="eyebrow">Локальная учебная платформа</p>
+        <h1 id="onboarding-title">Ваш темп.<br /><em>Ваш маршрут.</em></h1>
+        <p>
+          Подготовка к адаптивной академической гребле с понятным прогрессом и безопасным темпом.
+        </p>
+      </div>
+      <p class="privacy-note">
+        Деморежим: без паролей, сервера и синхронизации между устройствами.
+      </p>
+    </section>
+    <section class="onboarding-form-panel" aria-label="Создание локального профиля">
+      <div class="stepper" aria-label="Шаги входа">
+        <span
+          [class.active]="currentStep === 1"
+          [attr.aria-current]="currentStep === 1 ? 'step' : null"
+          ><b>01</b><small>Профиль</small></span
+        ><i aria-hidden="true"></i
+        ><span
+          [class.active]="currentStep === 2"
+          [attr.aria-current]="currentStep === 2 ? 'step' : null"
+          ><b>02</b><small>Роль</small></span
+        >
+      </div>
+      <form [formGroup]="form" (ngSubmit)="currentStep === 1 ? next() : submit()" novalidate>
+        @if (currentStep === 1) {
+          <p class="eyebrow">Шаг 1 из 2</p>
+          <h2>Как к вам обращаться?</h2>
+          <p class="form-intro">
+            Имя сохранится только в этом браузере и будет отображаться в учебном пространстве.
+          </p>
+          <div class="field">
+            <label for="firstName">Имя</label
+            ><input
+              id="firstName"
+              formControlName="firstName"
+              autocomplete="given-name"
+              [attr.aria-invalid]="form.controls.firstName.invalid && submitted ? 'true' : null"
+              aria-describedby="firstName-error"
+            />
+            @if (form.controls.firstName.invalid && submitted) {
+              <span id="firstName-error" class="error" role="alert"
+                >Введите имя до 60 символов.</span
+              >
+            }
+          </div>
+          <div class="field">
+            <label for="lastName">Фамилия</label
+            ><input
+              id="lastName"
+              formControlName="lastName"
+              autocomplete="family-name"
+              [attr.aria-invalid]="form.controls.lastName.invalid && submitted ? 'true' : null"
+              aria-describedby="lastName-error"
+            />
+            @if (form.controls.lastName.invalid && submitted) {
+              <span id="lastName-error" class="error" role="alert"
+                >Введите фамилию до 60 символов.</span
+              >
+            }
+          </div>
+          <button class="button primary full" type="submit">Продолжить <span>→</span></button>
+        } @else {
+          <p class="eyebrow">Шаг 2 из 2</p>
+          <h2>Выберите свой маршрут</h2>
+          <p class="form-intro">
+            Роль определяет стартовую страницу и доступные демонстрационные действия.
+          </p>
+          <div
+            class="role-options"
+            role="radiogroup"
+            aria-label="Роль пользователя"
+            aria-describedby="role-error"
+          >
+            @for (option of roleOptions; track option.id) {
+              <label class="role-option" [class.selected]="form.controls.role.value === option.id"
+                ><input type="radio" formControlName="role" [value]="option.id" /><span
+                  class="radio-mark"
+                  aria-hidden="true"
+                ></span
+                ><span
+                  ><strong>{{ option.title }}</strong
+                  ><small>{{ option.description }}</small></span
+                ></label
+              >
+            }
+          </div>
+          @if (form.controls.role.invalid && submitted) {
+            <p id="role-error" class="error" role="alert">Выберите роль, чтобы продолжить.</p>
+          }
+          <div class="form-actions">
+            <button class="button secondary" type="button" (click)="back()">← Назад</button
+            ><button class="button primary" type="submit">
+              {{ form.controls.role.value === 'athlete' ? 'Начать обучение' : 'Войти в деморежим' }}
+              <span>→</span>
+            </button>
+          </div>
+          <p class="privacy-note dark">
+            Локальный профиль не является авторизацией. Данные не покидают этот браузер.
+          </p>
+        }
+      </form>
+    </section>
+  }
+</main>

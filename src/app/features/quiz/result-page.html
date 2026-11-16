@@ -1,0 +1,52 @@
+<div class="page narrow">
+  @if (!attempt) {
+    <div class="empty-state">
+      <p class="eyebrow">Результат попытки</p>
+      <h1>Результат ещё не создан</h1>
+      <p class="lead">
+        Здесь появится разбор после завершения теста. Сначала завершите лекцию и отправьте ответы.
+      </p>
+      <a class="button primary" routerLink="/course/lecture">Открыть лекцию <span>→</span></a>
+    </div>
+  } @else {
+    <p class="eyebrow">Результат попытки</p>
+    <h1>{{ attempt.passed ? 'Тест пройден' : 'Материал требует повторения' }}</h1>
+    <div class="result-score">
+      <strong>{{ attempt.total | number: '1.0-2' }}</strong><span>/ 5 баллов</span
+      ><b>{{ percent() }}%</b>
+    </div>
+    <p class="lead">
+      {{
+        attempt.passed
+          ? 'Поздравляем! Вы набрали проходной балл.'
+          : 'Для зачёта необходимо не менее 4 баллов. ' +
+            (2 - state.attempts().length) +
+            ' попыток осталось.'
+      }}
+    </p>
+    @for (q of questions; track q.id; let i = $index) {
+      <article class="question-card">
+        <div class="question-head">
+          <span class="question-number">{{ i + 1 }}</span>
+          <div>
+            <h2>{{ q.text }}</h2>
+            <span class="status" [class.success]="(attempt.scores[i] ?? 0) === 1"
+              >Баллы: {{ attempt.scores[i] | number: '1.0-2' }} / 1</span
+            >
+          </div>
+        </div>
+        <p class="muted">{{ q.explanation }}</p>
+      </article>
+    }
+    <div class="form-actions">
+      <a class="button secondary" routerLink="/course/lecture">Вернуться к лекции</a>
+      @if (state.attempts().length < 2) {
+        <a class="button primary" routerLink="/course/quiz">Использовать следующую попытку</a>
+      }
+    </div>
+    <p>
+      Лучший результат: {{ state.bestScore() | number: '1.0-2' }} из 5. Попыток использовано:
+      {{ state.attempts().length }} из 2.
+    </p>
+  }
+</div>

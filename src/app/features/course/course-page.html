@@ -1,0 +1,91 @@
+<div class="course-page">
+  <section class="course-intro" aria-labelledby="course-title">
+    <div class="course-intro__copy">
+      <p class="eyebrow">Теоретическая подготовка</p>
+      <h1 id="course-title">Выбирайте тему в своём темпе</h1>
+      <p>
+        Четыре самостоятельных занятия об адаптивной академической гребле. Открывайте их в любом
+        порядке и возвращайтесь к материалам, когда нужно.
+      </p>
+      <a class="course-intro__link" routerLink="/materials"
+        >Учебные материалы <span aria-hidden="true">↗</span></a
+      >
+    </div>
+    <div class="course-intro__art" aria-hidden="true">
+      <span class="course-intro__oar"></span>
+      <span class="course-intro__wave course-intro__wave--one"></span>
+      <span class="course-intro__wave course-intro__wave--two"></span>
+      <span class="course-intro__wave course-intro__wave--three"></span>
+    </div>
+  </section>
+
+  <section class="course-section" aria-labelledby="topics-title">
+    <div class="course-section__heading">
+      <div>
+        <p class="eyebrow">Программа</p>
+        <h2 id="topics-title">Занятия курса</h2>
+      </div>
+      <span>{{ visibleTopics().length }} темы · свободный порядок</span>
+    </div>
+    <div class="course-grid">
+      @for (topic of visibleTopics(); track topic.id; let index = $index) {
+        <article class="course-card">
+          <div class="course-card__top">
+            <span class="course-card__number">{{ index + 1 | number: '2.0' }}</span>
+            <span class="course-card__type">{{
+              topic.id === 'safety' ? '4 страницы лекции' : 'Самостоятельное занятие'
+            }}</span>
+          </div>
+          <h3>{{ topic.title }}</h3>
+          <p>{{ topic.description }}</p>
+          <div class="course-card__bottom">
+            <span>{{ topic.outcome }}</span>
+            <a
+              [routerLink]="['/course/topics', topic.id]"
+              [attr.aria-label]="'Открыть занятие: ' + topic.title"
+              >Открыть занятие <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </article>
+      } @empty {
+        <div class="course-empty">Темы пока скрыты тренером. Загляните сюда позже.</div>
+      }
+    </div>
+  </section>
+
+  @if (state.topicVisibility()['safety'] !== false) {
+    <section class="safety-shortcut" aria-labelledby="safety-shortcut-title">
+      <div class="safety-shortcut__intro">
+        <p class="eyebrow">Быстрый переход</p>
+        <h2 id="safety-shortcut-title">Лекция по безопасности</h2>
+        <p>
+          Каждая страница открывается отдельно. Порядок чтения свободный; для допуска к итоговому
+          тесту отметьте изученными все четыре.
+        </p>
+        <div class="safety-shortcut__progress">
+          <span>Изучено {{ state.completedPageIds().length }} из {{ safetyPages.length }}</span>
+          <span>{{ safetyProgress() }}% с учётом теста</span>
+        </div>
+        <div
+          class="safety-shortcut__bar"
+          role="progressbar"
+          [attr.aria-valuenow]="safetyProgress()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Прогресс по лекции безопасности и тесту"
+        >
+          <span [style.width.%]="safetyProgress()"></span>
+        </div>
+      </div>
+      <div class="safety-shortcut__links">
+        @for (page of safetyPages; track page.id; let index = $index) {
+          <a [routerLink]="['/course/lecture', index + 1]">
+            <span>{{ index + 1 | number: '2.0' }}</span>
+            <strong>{{ page.title }}</strong>
+            <span aria-hidden="true">↗</span>
+          </a>
+        }
+      </div>
+    </section>
+  }
+</div>

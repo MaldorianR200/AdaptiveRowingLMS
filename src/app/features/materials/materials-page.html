@@ -1,0 +1,76 @@
+<div class="materials-page">
+  <header class="materials-heading">
+    <p class="eyebrow">Библиотека курса</p>
+    <h1>Учебные материалы</h1>
+    <p>Лекция, шаблон дневника и пример адаптивной тренировки собраны в одном месте.</p>
+  </header>
+
+  <div class="materials-grid">
+    <article class="material-card">
+      <span class="material-card__icon" aria-hidden="true">01</span>
+      <h2>Техника безопасности</h2>
+      <p>
+        Четыре страницы о подготовке, тренировке, сигналах и самочувствии. Страницы можно читать в
+        любом порядке.
+      </p>
+      <a routerLink="/course/topics/safety">Открыть лекцию <span aria-hidden="true">↗</span></a>
+      <small>PDF-памятка пока не опубликована.</small>
+    </article>
+    <article class="material-card">
+      <span class="material-card__icon" aria-hidden="true">02</span>
+      <h2>Дневник самоконтроля</h2>
+      <p>
+        Шаблон CSV для записи даты, вида занятия, длительности, субъективной нагрузки и
+        самочувствия.
+      </p>
+      <a href="assets/documents/training-diary.csv" download
+        >Скачать шаблон CSV <span aria-hidden="true">↓</span></a
+      >
+      <small>Файл сохраняется на ваше устройство.</small>
+    </article>
+  </div>
+
+  <section class="video-feature" aria-labelledby="video-title">
+    <div class="video-feature__copy">
+      <p class="eyebrow">Видео · British Rowing</p>
+      <h2 id="video-title">Адаптивная тренировка на гребном тренажёре</h2>
+      <p>
+        Пример 20‑минутного занятия Go Row Indoor. Тренировка включает разминку и упражнения с
+        вариантами выполнения. Видео на английском языке; выбирайте нагрузку с учётом рекомендаций
+        своего тренера.
+      </p>
+      <a
+        href="https://www.youtube.com/watch?v=7SJ9RIqN_5Y"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Открыть видео на YouTube <span aria-hidden="true">↗</span></a
+      >
+      <details>
+        <summary>Краткое содержание видео</summary>
+        <p>
+          Инструктор и спортсмены демонстрируют адаптивную тренировку в помещении: разминку, греблю
+          и варианты упражнений. Это пример занятия, а не индивидуальная программа или инструкция по
+          действиям на воде.
+        </p>
+      </details>
+    </div>
+    <div class="video-feature__player">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/7SJ9RIqN_5Y"
+        title="British Rowing: Go Row Indoor workout #7 — The fully adaptive workout"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="
+          accelerometer;
+          autoplay;
+          clipboard-write;
+          encrypted-media;
+          gyroscope;
+          picture-in-picture;
+          web-share;
+        "
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+</div>

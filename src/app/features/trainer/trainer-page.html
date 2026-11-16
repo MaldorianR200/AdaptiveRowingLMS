@@ -1,0 +1,61 @@
+<div class="page role-page">
+  @if (state.role() === 'coach') {
+    <p class="eyebrow">Локальная панель тренера</p>
+    <h1>Команда на одном экране</h1>
+    <p class="lead">
+      Профили спортсменов этого браузера. Это демонстрационные локальные данные, не общая база.
+    </p>
+    @if (athletes().length) {
+      <div class="athlete-list">
+        @for (profile of athletes(); track profile.id) {
+          <article class="athlete-row">
+            <div>
+              <strong>{{ state.profileName(profile) }}</strong><small>{{ profile.id }}</small>
+            </div>
+            <span>{{ pageCount(profile.id) }}/4 страниц</span>
+            <span
+              >{{ best(profile.id) | number: '1.0-2' }}/5 · {{ attemptCount(profile.id) }}/2
+              попытки</span
+            >
+            <button class="button danger small" type="button" (click)="reset(profile)">
+              Сбросить результаты
+            </button>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <h2>Профилей спортсменов пока нет</h2>
+        <p>Добавьте спортсмена через меню профиля, чтобы увидеть его локальный прогресс.</p>
+      </div>
+    }
+    <section class="visibility-panel">
+      <p class="eyebrow">Управление маршрутом</p>
+      <h2>Видимость тем</h2>
+      @for (topic of topics; track topic.id) {
+        <label class="toggle-row"
+          ><span>{{ topic.title }}</span
+          ><input
+            type="checkbox"
+            [checked]="state.topicVisibility()[topic.id] !== false"
+            (change)="state.setTopicVisible(topic.id, $any($event.target).checked)"
+        /></label>
+      }
+    </section>
+  } @else {
+    <p class="eyebrow">Обзор ассистента · только чтение</p>
+    <h1>Маршрут подготовки</h1>
+    <p class="lead">
+      Просматривайте учебные темы и локальную статистику без сброса результатов, изменения видимости
+      или модерации форума.
+    </p>
+    <div class="stats">
+      <div>
+        <strong>{{ topics.length }}</strong><span>тем курса</span>
+      </div>
+      <div><strong>4</strong><span>страницы лекции</span></div>
+      <div><strong>5</strong><span>заданий теста</span></div>
+    </div>
+    <a class="button primary" routerLink="/course">Открыть курс <span>→</span></a>
+  }
+</div>

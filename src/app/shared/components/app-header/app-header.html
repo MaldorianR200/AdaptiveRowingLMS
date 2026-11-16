@@ -1,0 +1,51 @@
+<header class="topbar site-header">
+  <div class="site-header__inner">
+    <a class="brand site-header__brand" routerLink="/" aria-label="Adaptive Rowing LMS, на главную">
+      <img class="site-header__logo" src="favicon.svg" alt="" width="40" height="40" />
+      <span class="site-header__brand-full">Adaptive Rowing <b>LMS</b></span>
+      <span class="site-header__brand-short">AR <b>LMS</b></span>
+    </a>
+    @if (state.profile(); as profile) {
+      <nav class="site-header__nav" aria-label="Основная навигация">
+        <a routerLink="/course" routerLinkActive="is-active">Курс</a>
+        <a routerLink="/materials" routerLinkActive="is-active">Материалы</a>
+        <a routerLink="/forum" routerLinkActive="is-active">Форум</a>
+        @if (profile.role === 'athlete') {
+          <a routerLink="/dashboard" routerLinkActive="is-active">Мой прогресс</a>
+        } @else {
+          <a routerLink="/trainer" routerLinkActive="is-active">Обзор роли</a>
+        }
+      </nav>
+      <details class="site-header__account">
+        <summary aria-label="Открыть меню профиля">
+          <span class="site-header__avatar" aria-hidden="true">{{
+            profile.firstName.slice(0, 1)
+          }}</span>
+          <span class="site-header__identity">
+            <strong>{{ state.profileName() }}</strong>
+            <small>{{ roleName[profile.role] }} · деморежим</small>
+          </span>
+          <span class="site-header__chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="site-header__account-panel">
+          <p>Локальные профили этого браузера</p>
+          @for (localProfile of state.profiles(); track localProfile.id) {
+            <button
+              type="button"
+              [class.is-current]="localProfile.id === profile.id"
+              (click)="state.setProfile(localProfile.id)"
+            >
+              <span>{{ state.profileName(localProfile) }}</span><small>{{
+                roleName[localProfile.role]
+              }}</small>
+            </button>
+          }
+          <div class="site-header__account-actions">
+            <button type="button" (click)="addProfile()">Добавить пользователя</button>
+            <button type="button" (click)="switchUser()">Сменить пользователя</button>
+          </div>
+        </div>
+      </details>
+    }
+  </div>
+</header>

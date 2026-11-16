@@ -1,0 +1,70 @@
+<div class="page forum-page">
+  <p class="eyebrow">Локальное сообщество курса</p>
+  <h1>Форум маршрута</h1>
+  <p class="notice">
+    Сообщения сохраняются только в этом браузере. Темы с пометкой «Пример» не принадлежат текущему
+    профилю.
+  </p>
+  @if (selectedId && !threads().some((thread) => thread.id === selectedId)) {
+    <div class="empty-state">
+      <h2>Тема не найдена</h2>
+      <p>Ссылка ведёт на удалённую или ещё не созданную локальную тему.</p>
+      <a class="button secondary" routerLink="/forum">Вернуться к форуму</a>
+    </div>
+  } @else {
+    <div class="content-grid">
+      <section>
+        @for (thread of threads(); track thread.id) {
+          @if (!selectedId || selectedId === thread.id) {
+            <article class="topic-card" [id]="thread.id">
+              <p class="eyebrow">
+                {{ thread.author }} · {{ thread.date }}
+                @if (thread.isExample) {
+                  · Пример
+                }
+              </p>
+              <h2>{{ thread.title }}</h2>
+              <p>{{ thread.text }}</p>
+              @for (replyItem of thread.replies; track $index) {
+                <p class="forum-reply">
+                  <b>{{ replyItem.author }}:</b> {{ replyItem.text }}
+                </p>
+              }
+              <form (ngSubmit)="reply(thread)">
+                <label class="sr-label" [for]="'reply-' + thread.id">Ваш ответ</label
+                ><input
+                  [id]="'reply-' + thread.id"
+                  [(ngModel)]="drafts[thread.id]"
+                  [name]="'reply-' + thread.id"
+                  placeholder="Напишите ответ"
+                /><button class="button secondary" type="submit">Ответить</button>
+              </form>
+              @if (state.role() === 'coach' && !thread.isExample) {
+                <button class="text-button" type="button" (click)="remove(thread.id)">
+                  Удалить тему
+                </button>
+              }
+            </article>
+          }
+        }
+      </section>
+      @if (!selectedId) {
+        <form class="topic-card" (ngSubmit)="add()">
+          <h2>Создать тему</h2>
+          <label>Заголовок<input name="title" [(ngModel)]="title" required maxlength="100" /></label
+          ><label
+            >Сообщение<textarea
+              name="text"
+              [(ngModel)]="text"
+              required
+              maxlength="1000"
+              rows="5"
+            ></textarea></label
+          ><button class="button primary" type="submit">Опубликовать</button>
+        </form>
+      } @else {
+        <a class="button secondary" routerLink="/forum">← Все темы</a>
+      }
+    </div>
+  }
+</div>
